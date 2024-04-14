@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import AddTodo from './AddTodo.jsx';
-import FindTodo from './FindTodo.jsx';
-import TaskList from './TaskList.jsx';
-import FilterTodo from './FilterTodo.jsx';
+import { useState, useEffect } from 'react';
+import AddTodo from './AddTodo/AddTodo.jsx';
+import FindTodo from './FindTodo/FindTodo.jsx';
+import TaskList from './TaskList/TaskList.jsx';
+import FilterTodo from './FilterTodo/FilterTodo.jsx';
+import DeleteTaskList from './DeleteTaskList/DeleteTaskList.jsx';
 
-let nextId = 3;
 const initialTodos = [
   { id: 0, title: 'Buy milk', done: true },
   { id: 1, title: 'Eat tacos', done: false },
@@ -12,82 +12,68 @@ const initialTodos = [
 ];
 
 export default function TaskApp() {
-  const [todos, setTodos] = useState(
-    initialTodos
-  );
+  const [todos, setTodos] = useState(() => {
+    const saved = localStorage.getItem("todos");
+    const initialValue = JSON.parse(saved);
+    return initialValue || initialTodos;
+  });
 
-  function handleAddTodo(title) {
-    setTodos([
-      ...todos,
-      {
-        id: nextId++,
-        title: title,
-        done: false
-      }
-    ]);
+  const [filtered, setFiltered] = useState(todos);
+
+  useEffect(() => {
+    setFiltered(todos);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  function todoFilter(status) {
+    if (status === 'all') {
+      setFiltered(todos);
+    } else {
+      let newTodos = todos.filter(todo => todo.done === status);
+      setFiltered(newTodos);
+    }
   }
 
-  function handleFindTodo(title) {
-    setTodos(todos.filter(todo => todo.title === title));
+  function findTodo(value) {
+    //текущие задачи и новые отфильтрованные задачи
+    let currentTodos = [];
+    let newList = [];
+    if (value !== "") {
+      currentTodos = todos;
+      newList = currentTodos.filter(todo => {
+        const lc = todo.title.toLowerCase();
+        const filter = value.toLowerCase();
+        return lc.includes(filter);
+      });
+    } else {
+      newList = todos;
+    }
+    setFiltered(newList);
   }
 
-  function handleDeleteTodos() {
+  function deleteTaskList() {
     setTodos([]);
   }
 
-  function handleChangeTodo(nextTodo) {
-    setTodos(todos.map(t => {
-      if (t.id === nextTodo.id) {
-        return nextTodo;
-      } else {
-        return t;
-      }
-    }));
-  }
-
-  function handleDeleteTodo(todoId) {
-    setTodos(
-      todos.filter(t => t.id !== todoId)
-    );
-  }
-
-  function handleFilterCompletedTodo(todos) {
-    setTodos(
-      todos.filter(todo => todo.done === true)
-    );
-  }
-
-  function handleFilterUncompletedTodo(todos) {
-    setTodos(
-      todos.filter(todo => todo.done !== true)
-    );
-  }
-
-  function handleShowAllTodo() {
-    setTodos(initialTodos);
-  }
-
   return (
-    <>      
+    <>
       <AddTodo
-        onAddTodo={handleAddTodo}
+        todos={todos}
+        setTodos={setTodos}
       />
       <FindTodo
-        onFindTodo={handleFindTodo}
+        onFindTodo={findTodo}
       />
-      <button onClick={handleDeleteTodos}>
-        Delete All
-      </button>
+      <DeleteTaskList
+        onDeleteTaskList={deleteTaskList}
+      />
       <FilterTodo
-        todos={todos}
-        onFilterCompletedTodo={handleFilterCompletedTodo}
-        onFilterUncompletedTodo={handleFilterUncompletedTodo}
-        onShowAllTodo={handleShowAllTodo}
+        onTodoFilter={todoFilter}
       />
       <TaskList
         todos={todos}
-        onChangeTodo={handleChangeTodo}
-        onDeleteTodo={handleDeleteTodo}
+        setTodos={setTodos}
+        filtered={filtered}
       />
     </>
   );
