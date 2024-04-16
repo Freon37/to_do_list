@@ -1,69 +1,48 @@
 /* eslint-disable react/prop-types */
+import { Trash, Pen, Lock, LockOpen, ListPlus } from "@phosphor-icons/react";
 import { useState } from 'react';
+import styles from './TaskList.module.css';
 
-export default function TaskList({ todos, setTodos, filtered }) {
+export default function TaskList({ onDeleteTodo, onEditTodo, onStatusTodo, onSaveTodo, filtered }) {
   const [edit, setEdit] = useState(null);
   const [title, setTitle] = useState(' ');
 
-  function deleteTodo(id) {
-    let newTodo = todos.filter(todo => todo.id !== id);
-    setTodos(newTodo);
-  }
-
-  function editTodo(id, title) {
-    setEdit(id);
-    setTitle(title);
-  }
-
-  function statusTodo(id) {
-    let newTodo = todos.filter(todo => {
-      if (todo.id === id) {
-        todo.done = !todo.done;
-      }
-      return todo;
-    });
-    setTodos(newTodo);
-  }
-
-  function saveTodo(id) {
-    let newTodo = todos.map(todo => {
-      if (todo.id === id) {
-        todo.title = title;
-      }
-      return todo;
-    });
-    setTodos(newTodo);
-    setEdit(null);
-  }
-
   return (
-    <ul>
+    <ul className={styles.taskList}>
       {
         filtered.map(todo => (
-          <li key={todo.id}>
+          <li key={todo.id} className={ edit === todo.id ? styles.listItemChange : styles.listItem}>
             {
               edit === todo.id ?
-                <div>
-                  <input value={title} onChange={e => setTitle(e.target.value)} />
-                </div> :
-                <div>{todo.title}</div>
+                <input className={styles.changeInput} value={title} onChange={e => setTitle(e.target.value)} />
+                :
+                <p className={todo.done ? styles.listItemTextSelected : styles.listItemText}>{todo.title}</p>
             }
 
             {
               edit === todo.id ?
-                <div>
-                  <button onClick={() => saveTodo(todo.id)}>Save</button>
+                <div className={styles.containerButtons}>
+                  <button className={styles.button} onClick={() => onSaveTodo(todo.id, title, setEdit)}>
+                    <ListPlus size={28} />
+                  </button>
                 </div> :
-                <div>
-                  <button onClick={() => deleteTodo(todo.id)}>Remove</button>
-                  <button onClick={() => editTodo(todo.id, todo.title)}>Edit</button>
-                  <button onClick={() => statusTodo(todo.id)}>Close / Open</button>
+                <div className={styles.containerButtons}>
+                  <button className={styles.button} onClick={() => onDeleteTodo(todo.id)}>
+                    <Trash size={28} />
+                  </button>
+                  <button className={styles.button} onClick={() => onEditTodo(todo.id, todo.title, setEdit, setTitle)}>
+                    <Pen size={28} />
+                  </button>
+                  <button className={styles.button} onClick={() => onStatusTodo(todo.id)}>
+                    {
+                      todo.done ? <Lock size={28} /> : <LockOpen size={28} />
+                    }
+                  </button>
                 </div>
             }
           </li>
         ))
       }
-
     </ul>
   )
 }

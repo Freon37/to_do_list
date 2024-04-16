@@ -1,0 +1,76 @@
+.taskList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.listItem,
+.listItemChange {
+    display: flex;
+    align-items: center;
+    background: var(--gray-400);
+    gap: 0.75rem;
+    border: 1px solid #333333;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.listItem:not(:first-child),
+.listItemChange:not(:first-child) {
+    margin-top: 0.75rem;
+}
+
+.listItemChange {
+    border-color: var(--gray-500);
+    background: var(--gray-500);
+}
+
+.listItemText,
+.listItemTextSelected {
+    grid-area: text;
+    width: 90%;
+    text-align: justify;
+    color: var(--gray-100);
+}
+
+.containerButtons {
+    display: flex;
+    gap: 5px;
+}
+
+.listItemTextSelected {
+    text-decoration-line: line-through;
+    color: var(--gray-300);
+}
+
+.button {
+    display: flex;
+    background-color: transparent;
+    border: 0;
+    color: var(--gray-300);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.button:hover {
+    color: var(--red-500);
+}
+
+.button:active {
+    opacity: 0.7;
+}
+
+.changeInput {
+    width: 100%;
+    background: transparent;
+    
+    /* border-radius: 8px; */
+    color: var(--gray-100);
+    border: 1px solid transparent;
+    border-bottom: 1px solid #ded3e850;
+    transition: border .2s;
+}
