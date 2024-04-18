@@ -1,0 +1,80 @@
+.controlModule {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: -1.75rem;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.row,
+.rowFind,
+.rowFilter {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rowFind {
+    justify-content: space-between;
+}
+
+.rowFilter {
+    justify-content: center;
+    gap: 15px;
+}
+
+.add {
+    width: 100%;
+    background: var(--gray-500);
+    padding: 1rem;
+    border-radius: 8px;
+    color: var(--gray-100);
+    border: 1px solid transparent;
+    transition: border .2s;
+}
+
+.find {
+    width: 84%;
+    background: var(--gray-500);
+    padding: 1rem;
+    border-radius: 8px;
+    color: var(--gray-100);
+    border: 1px solid transparent;
+    transition: border .2s;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    gap: .5rem;
+    background: var(--blue-700);
+    border-radius: 8px;
+    color: var(--gray-100);
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    border: 0;
+    transition: background .2s;
+}
+
+.button:hover {
+    background: var(--blue-400);
+}
+
+.button:active {
+    opacity: 0.7;
+}
+
+.buttonActive {
+    composes: button;
+    background-color: var(--blue-900);
+}
+
+.buttonActive:hover {
+    background-color: var(--blue-700);
+}

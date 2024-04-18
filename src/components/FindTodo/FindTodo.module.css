@@ -1,9 +1,0 @@
-.find {
-    width: 84%;
-    background: var(--gray-500);
-    padding: 1rem;
-    border-radius: 8px;
-    color: var(--gray-100);
-    border: 1px solid transparent;
-    transition: border .2s;
-}

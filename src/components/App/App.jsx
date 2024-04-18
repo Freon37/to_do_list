@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './App.module.css';
-import Header from '../Header/Header.jsx';
-import AddTodo from '../AddTodo/AddTodo.jsx';
-import FindTodo from '../FindTodo/FindTodo.jsx';
+import todoLogo from "../../assets/logo.svg";
 import TaskList from '../TaskList/TaskList.jsx';
-import FilterTodo from '../FilterTodo/FilterTodo.jsx';
-import DeleteTaskList from '../DeleteTaskList/DeleteTaskList.jsx';
+import ControlModule from '../ControlModule/ControlModule.jsx';
 
 const initialTodos = [
   { id: 0, title: 'Buy milk', done: true },
@@ -68,6 +65,13 @@ export default function TaskApp() {
     }
   }
 
+  function changeStyle(filterButtons, id, setfilterButton) {
+    let newFilterButtons = filterButtons.map(button =>
+      button.id === id ? { ...button, active: true } : { ...button, active: false }
+    )
+    setfilterButton(newFilterButtons);
+  }
+
   function deleteTaskList() {
     setTodos([]);
   }
@@ -105,27 +109,20 @@ export default function TaskApp() {
 
   return (
     <div className={styles.wrapper}>
-      <Header></Header>
-      <main className={styles.content}>
-        <div className={styles.list}>
-          <div className={styles.special}>
-            <AddTodo
-              onAddTodo={addTodo}
-            />
-          </div>
-          <div className={styles.find}>
-            <FindTodo
-              onFindTodo={findTodo}
-            />
-            <DeleteTaskList
-              onDeleteTaskList={deleteTaskList}
-            />
-          </div>
-          <div className={styles.filter}>
-            <FilterTodo
-              onTodoFilter={todoFilter}
-            />
-          </div>
+      <header className={styles.header}>
+        <h1>
+          <img src={todoLogo} alt="Logo todo" />
+        </h1>
+      </header>
+      <main className={styles.main}>
+        <section className={styles.list}>
+          <ControlModule
+            onAddTodo={addTodo}
+            onFindTodo={findTodo}
+            onDeleteTaskList={deleteTaskList}
+            onTodoFilter={todoFilter}
+            onChangeStyle={changeStyle}
+          />
           <TaskList
             onDeleteTodo={deleteTodo}
             onEditTodo={editTodo}
@@ -133,7 +130,7 @@ export default function TaskApp() {
             onSaveTodo={saveTodo}
             filtered={filtered}
           />
-        </div>
+        </section>
       </main>
     </div>
   );
