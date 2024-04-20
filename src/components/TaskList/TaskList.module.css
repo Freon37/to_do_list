@@ -59,6 +59,7 @@
 
 .button:hover {
     color: var(--red-500);
+    opacity: 0.7;
 }
 
 .button:active {
