@@ -3,14 +3,14 @@ import { Trash, Pen, ListPlus, CheckFat } from "@phosphor-icons/react";
 import { useState } from 'react';
 import styles from './TaskList.module.css';
 
-export default function TaskList({ onDeleteTodo, onEditTodo, onStatusTodo, onSaveTodo, filtered }) {
+export default function TaskList({ onDeleteTodo, onEditTodo, onStatusTodo, onSaveTodo, filteredTasks }) {
   const [edit, setEdit] = useState(null);
-  const [title, setTitle] = useState(' ');
+  const [title, setTitle] = useState('');
 
   return (
     <ul className={styles.taskList}>
       {
-        filtered.map(todo => (
+        filteredTasks.map(todo => (
           <li key={todo.id} className={edit === todo.id ? styles.listItemChange : styles.listItem}>
             {
               edit === todo.id ?
@@ -18,7 +18,6 @@ export default function TaskList({ onDeleteTodo, onEditTodo, onStatusTodo, onSav
                 :
                 <p className={todo.done ? styles.listItemTextSelected : styles.listItemText}>{todo.title}</p>
             }
-
             {
               edit === todo.id ?
                 <div className={styles.containerButtons}>

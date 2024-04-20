@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import styles from './ControlModule.module.css';
 
-const initialFilterButtons = [
-    { id: 0, text: 'All', status: 'all', active: true },
-    { id: 1, text: 'Completed', status: true, active: false },
-    { id: 2, text: 'Uncompleted', status: false, active: false }
-];
-
 /* eslint-disable react/prop-types */
-export default function ControlModule({ onAddTodo, onFindTodo, onDeleteTaskList, onTodoFilter, onChangeStyle }) {
+export default function ControlModule({ onAddTodo, onFindTodo, searchTerm, onDeleteTaskList, onTodoFilter, filterButtons }) {
     const [title, setTitle] = useState('');
-    const [filterButtons, setfilterButton] = useState(initialFilterButtons);
 
     return (
         <div className={styles.controlModule}>
@@ -19,23 +12,13 @@ export default function ControlModule({ onAddTodo, onFindTodo, onDeleteTaskList,
                 <button className={styles.button} onClick={() => onAddTodo(title, setTitle)}>Add</button>
             </div>
             <div className={styles.rowFind}>
-                <input className={styles.find} placeholder="Find todo..." onChange={({ target: { value } }) => onFindTodo(value)} />
+                <input className={styles.find} type='text' placeholder="Find todo..." value={searchTerm} onChange={onFindTodo} />
                 <button className={styles.button} onClick={onDeleteTaskList}>Delete All</button>
             </div>
             <div className={styles.rowFilter}>
-                {
-                    filterButtons.map(fb => (
-                        <button
-                            key={fb.id}
-                            className={fb.active ? styles.buttonActive : styles.button}
-                            onClick={() => {
-                                onChangeStyle(filterButtons, fb.id, setfilterButton);
-                                onTodoFilter(fb.status);
-                            }}>
-                            {fb.text}
-                        </button>
-                    ))
-                }
+                <button className={filterButtons.all ? styles.buttonActive : styles.button} onClick={() => onTodoFilter('all')}>All</button>
+                <button className={filterButtons.completed ? styles.buttonActive : styles.button} onClick={() => onTodoFilter('completed')}>Completed</button>
+                <button className={filterButtons.uncompleted ? styles.buttonActive : styles.button} onClick={() => onTodoFilter('uncompleted')}>Uncompleted</button>
             </div>
         </div>
     )

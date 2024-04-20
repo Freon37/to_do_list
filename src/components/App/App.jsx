@@ -11,17 +11,23 @@ const initialTodos = [
   { id: 2, title: 'Brew tea', done: false },
 ];
 
-export default function TaskApp() {
+const initialFilterButtons = {
+  all: true,
+  completed: false,
+  uncompleted: false
+};
+
+export default function App() {
   const [todos, setTodos] = useState(() => {
     const saved = localStorage.getItem("todos");
     const initialValue = JSON.parse(saved);
     return initialValue || initialTodos;
   });
-
-  const [filtered, setFiltered] = useState(todos);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterButtons, setFilterButtons] = useState(initialFilterButtons);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    setFiltered(todos);
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
@@ -39,61 +45,34 @@ export default function TaskApp() {
     }
   }
 
-  function findTodo(value) {
-    //текущие задачи и новые отфильтрованные задачи
-    let currentTodos = [];
-    let newList = [];
-    if (value !== "") {
-      currentTodos = todos;
-      newList = currentTodos.filter(todo => {
-        const lc = todo.title.toLowerCase();
-        const filter = value.toLowerCase();
-        return lc.includes(filter);
-      });
-    } else {
-      newList = todos;
-    }
-    setFiltered(newList);
-  }
-
-  function todoFilter(status) {
-    if (status === 'all') {
-      setFiltered(todos);
-    } else {
-      let newTodos = todos.filter(todo => todo.done === status);
-      setFiltered(newTodos);
-    }
-  }
-
-  function changeStyle(filterButtons, id, setfilterButton) {
-    let newFilterButtons = filterButtons.map(button =>
-      button.id === id ? { ...button, active: true } : { ...button, active: false }
-    )
-    setfilterButton(newFilterButtons);
+  function findTodo(event) {
+    setSearchTerm(event.target.value);
   }
 
   function deleteTaskList() {
     setTodos([]);
   }
 
-  function deleteTodo(id) {
-    let newTodo = todos.filter(todo => todo.id !== id);
-    setTodos(newTodo);
+  function todoFilter(filterType) {
+    setFilter(filterType);
+    setFilterButtons({
+      ...filterButtons,
+      all: filterType === 'all',
+      completed: filterType === 'completed',
+      uncompleted: filterType === 'uncompleted'
+    });
+  }
+
+  function statusTodo(id) {
+    const updatedTasks = todos.map(todo =>
+      todo.id === id ? { ...todo, done: !todo.done } : todo
+    );
+    setTodos(updatedTasks);
   }
 
   function editTodo(id, title, setEdit, setTitle) {
     setEdit(id);
     setTitle(title);
-  }
-
-  function statusTodo(id) {
-    let newTodo = todos.filter(todo => {
-      if (todo.id === id) {
-        todo.done = !todo.done;
-      }
-      return todo;
-    });
-    setTodos(newTodo);
   }
 
   function saveTodo(id, title, setEdit) {
@@ -107,6 +86,21 @@ export default function TaskApp() {
     setEdit(null);
   }
 
+  function deleteTodo(id) {
+    let newTodo = todos.filter(todo => todo.id !== id);
+    setTodos(newTodo);
+  }
+
+  const filteredTasks = todos.filter(todo => {
+    if (filter === 'all') {
+      return true;
+    } else if (filter === 'completed') {
+      return todo.done;
+    } else if (filter === 'uncompleted') {
+      return !todo.done;
+    }
+  }).filter(todo => todo.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
@@ -118,17 +112,18 @@ export default function TaskApp() {
         <section className={styles.list}>
           <ControlModule
             onAddTodo={addTodo}
+            searchTerm={searchTerm}
             onFindTodo={findTodo}
             onDeleteTaskList={deleteTaskList}
             onTodoFilter={todoFilter}
-            onChangeStyle={changeStyle}
+            filterButtons={filterButtons}
           />
           <TaskList
             onDeleteTodo={deleteTodo}
             onEditTodo={editTodo}
             onStatusTodo={statusTodo}
             onSaveTodo={saveTodo}
-            filtered={filtered}
+            filteredTasks={filteredTasks}
           />
         </section>
       </main>
