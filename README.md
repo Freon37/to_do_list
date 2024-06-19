@@ -11,9 +11,9 @@ This is a simple to-do list web application created using React.
   - [Functional](#functional)
   - [Features](#features)
   - [Installation](#installation)
-  - [⚙ Configuration](#⚙-configuration)
-    - [🛠 Technical stack](#🛠-technical-stack)
-    - [🛠 Tools](#🛠-tools)
+  - [⚙ Configuration](#-configuration)
+    - [🛠 Technical stack](#-technical-stack)
+    - [🛠 Tools](#-tools)
   - [Useful materials](#useful-materials)
   
 ## Functional
