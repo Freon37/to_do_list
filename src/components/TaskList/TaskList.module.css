@@ -1,3 +1,7 @@
+.content {
+    width: 100%;
+}
+
 .taskList {
     display: flex;
     flex-direction: column;
@@ -69,9 +73,13 @@
 .changeInput {
     width: 100%;
     background: transparent;
-    
+
     color: var(--gray-100);
     border: 1px solid transparent;
     border-bottom: 1px solid #ded3e850;
     transition: border .2s;
+}
+
+.altText {
+    color: var(--gray-300);
 }
